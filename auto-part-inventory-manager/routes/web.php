@@ -24,12 +24,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::resource('inventory', CarController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
 
     // Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 });
 
-Route::resource('inventory', CarController::class)
-    ->only(['index', 'store', 'update', 'destroy']);
     // ->middleware(['auth', 'verified']);
 
 // Route::get('/inventory', function(){

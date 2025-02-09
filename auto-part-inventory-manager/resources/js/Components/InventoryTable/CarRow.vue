@@ -5,16 +5,17 @@ import { Link, router } from "@inertiajs/vue3";
 import PartTable from "./PartTable.vue";
 import dayjs from "dayjs";
 import BaseTable from "./BaseTable.vue";
-const car = defineProps(["car"]);
+const props = defineProps(["car"]);
 
 let isShown = ref(false);
 let isEditing = ref(false);
 
 function deleteCar() {
     if (confirm("Are you sure?")) {
-        router.delete(route("inventory.destroy", car.id));
-    }
-}
+        console.log("Starting delete request...");
+        router.delete(
+            route("inventory.destroy", props.car.id))
+}}
 
 function changeShown() {
     isShown.value = !isShown.value;
@@ -61,16 +62,20 @@ function changeEditing() {
                     </svg>
                 </button>
             </th>
-            <th>{{ car.id }}</th>
+            <th>{{ props.car.id }}</th>
             <th scope="col">
-                {{ car.name }}
+                {{ props.car.name }}
             </th>
             <th>
-                {{ car.registration_number }}
+                {{ props.car.registration_number }}
             </th>
-            <th>{{ car.is_registered }}</th>
-            <th>{{ dayjs(car.created_at).format("YYYY-MM-DD HH:mm") }}</th>
-            <th>{{ dayjs(car.updated_at).format("YYYY-MM-DD HH:mm") }}</th>
+            <th>{{ props.car.is_registered }}</th>
+            <th>
+                {{ dayjs(props.car.created_at).format("YYYY-MM-DD HH:mm") }}
+            </th>
+            <th>
+                {{ dayjs(props.car.updated_at).format("YYYY-MM-DD HH:mm") }}
+            </th>
             <td>
                 <button @click="deleteCar">Delete</button>
             </td>

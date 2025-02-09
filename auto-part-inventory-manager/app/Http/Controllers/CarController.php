@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Car;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Redirect;
@@ -73,8 +75,9 @@ class CarController extends Controller
      */
     public function destroy(Car $car): RedirectResponse
     {
-        Gate::authorize('delete', $car);
-        $car->delete();
+        // Gate::authorize('delete', $car);
+
+        $car->forceDelete();
 
         return redirect()->route('inventory.index')->with('message', 'Car deleted successfully.');
     }
