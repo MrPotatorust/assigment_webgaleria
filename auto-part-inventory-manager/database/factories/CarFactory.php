@@ -16,10 +16,21 @@ class CarFactory extends Factory
      */
     public function definition(): array
     {
+
+        $isRegistered =fake()->boolean();
+
+        if ($isRegistered){
+            $registrationNumber = fake()->numberBetween(1, 9999);
+        }
+        else {
+            $registrationNumber = null;
+        }
+
+
         return [
             'name' => fake()->word(),
-            'registration_number' => fake()->numberBetween(1, 9999),
-            'is_registered' => fake()->boolean()
+            'registration_number' => $registrationNumber,
+            'is_registered' => $isRegistered
         ];
     }
 }

@@ -23,9 +23,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    Route::resource('/inventory', CarController::class);
 
+
+    // Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 });
+
+Route::resource('inventory', CarController::class)
+    ->only(['index', 'store', 'update', 'destroy']);
+    // ->middleware(['auth', 'verified']);
+
+// Route::get('/inventory', function(){
+//     return Inertia::render('Inventory');})->name('test');
 
 require __DIR__.'/auth.php';

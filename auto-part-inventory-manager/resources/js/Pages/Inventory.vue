@@ -1,6 +1,7 @@
 <script setup>
-import Car from "@/Components/Car.vue";
+import Car from "@/Components/InventoryTable/CarRow.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import BaseTable from "@/Components/InventoryTable/BaseTable.vue";
 import { Head } from "@inertiajs/vue3";
 
 defineProps(["cars"]);
@@ -17,7 +18,9 @@ defineProps(["cars"]);
         </template>
 
         <main>
-            <Car v-for="car in cars" :key="car.id" :car="car" />
+            <div class="justify-items-center">
+                <BaseTable :cars="cars" />
+            </div>
         </main>
     </AuthenticatedLayout>
 </template>

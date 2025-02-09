@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Models\Car;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Redirect;
 
 class CarController extends Controller
 {
@@ -30,7 +33,15 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        return 'store';
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'registration_number' => $request->is_registered ? 'required|string|max:255' : 'nullable|string|max:255',
+            'is_registered' => 'boolean'
+        ]);
+
+        Car::create($validated);
+
+        return redirect(route('inventory.index'));
     }
 
     /**
@@ -60,8 +71,11 @@ class CarController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Car $car)
+    public function destroy(Car $car): RedirectResponse
     {
-        return 'destroy';
+        Gate::authorize('delete', $car);
+        $car->delete();
+
+        return redirect()->route('inventory.index')->with('message', 'Car deleted successfully.');
     }
 }

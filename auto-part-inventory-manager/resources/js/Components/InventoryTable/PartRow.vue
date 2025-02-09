@@ -1,5 +1,6 @@
 <script setup>
 defineProps(["part"]);
+import dayjs from "dayjs";
 </script>
 
 <template>
@@ -8,7 +9,7 @@ defineProps(["part"]);
             {{ part.name }}
         </td>
         <td>{{ part.serialnumber }}</td>
-        <td>{{ part.created_at }}</td>
-        <td>{{ part.updated_at }}</td>
+        <td>{{ dayjs(part.created_at).format("YYYY-MM-DD HH:mm") }}</td>
+        <td>{{ dayjs(part.updated_at).format("YYYY-MM-DD HH:mm") }}</td>
     </tr>
 </template>
