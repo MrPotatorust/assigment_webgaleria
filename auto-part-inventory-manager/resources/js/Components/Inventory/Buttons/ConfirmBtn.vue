@@ -1,16 +1,12 @@
 <script setup>
 import { router } from "@inertiajs/vue3";
 
-const [url, carId, editedCar] = defineProps(["url", "carId", "editedCar"]);
+const props = defineProps(["url", "carId", "editedCar", "isEditing"]);
 
 function updateCar() {
     if (confirm("Are you sure?")) {
-        router.put(route("inventory.update", props.car.id), editedCar.value, {
-            onSuccess: () => {
-                isEditing.value = false;
-            },
-        });
-        changeEditing();
+        router.put(route(props.url, props.editedCar.id), props.editedCar.value);
+        props.isEditing = false;
     }
 }
 </script>

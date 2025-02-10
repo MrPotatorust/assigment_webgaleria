@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Redirect;
+use Response;
 
 class CarController extends Controller
 {
@@ -36,6 +37,7 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'registration_number' => $request->is_registered ? 'required|string|max:255' : 'nullable|string|max:255',
@@ -66,13 +68,20 @@ class CarController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Car $car): RedirectResponse
+    public function update(Request $request, Car $car)
     {
+
+        $isRegistered = filter_var($request->is_registered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        // $request->merge(['is_registered' => $isRegistered]);
+
+        // dd($request->is_registered);
         $validated = $request->validate([
             'name' => 'string|max:255',
             'registration_number' => 'string|max:255',
             'is_registered' => 'boolean'
         ]);
+
 
         $car->update($validated);
 

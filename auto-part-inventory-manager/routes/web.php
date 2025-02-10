@@ -25,14 +25,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('inventory', CarController::class)
-        ->only(['index', 'store']);
+    Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 
-    Route::put('/inventory/{car}', [CarController::class, 'update'])
-        ->name('inventory.update');
+    Route::put('/inventory/{car}', [CarController::class, 'update'])->name('inventory.update');
 
-    Route::delete('/inventory/{car}', [CarController::class, 'destroy'])
-        ->name('inventory.destroy');
+    Route::delete('/inventory/{car}', [CarController::class, 'destroy'])->name('inventory.destroy');
 
     // Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 });

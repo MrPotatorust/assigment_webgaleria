@@ -1,21 +1,30 @@
 <script setup>
 import Part from "./PartRow.vue";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { Link, router } from "@inertiajs/vue3";
 import PartTable from "../Tables/PartTable.vue";
 import dayjs from "dayjs";
+import ConfirmBtn from "../Buttons/ConfirmBtn.vue";
+import DeleteBtn from "../Buttons/DeleteBtn.vue";
+import EditBtn from "../Buttons/EditBtn.vue";
+import RevertBtn from "../Buttons/RevertBtn.vue";
 const props = defineProps(["car"]);
 
 const isShown = ref(false);
 const isEditing = ref(false);
+const submitErrors = ref();
 
 const createdAt = dayjs(props.car.created_at).format("YYYY-MM-DD HH:mm");
 const updatedAt = dayjs(props.car.updated_at).format("YYYY-MM-DD HH:mm");
 
-const editedCar = ref({
-    ...props.car,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
+const editedCar = ref({});
+
+watchEffect(() => {
+    editedCar.value = {
+        ...props.car,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+    };
 });
 
 function deleteCar() {
@@ -37,6 +46,10 @@ function updateCar() {
         router.put(route("inventory.update", props.car.id), editedCar.value, {
             onSuccess: () => {
                 isEditing.value = false;
+                submitErrors.value = null;
+            },
+            onError: (errors) => {
+                submitErrors.value = errors;
             },
         });
         changeEditing();
@@ -156,7 +169,10 @@ function revertCar() {
                 <input type="text" v-model="editedCar.registration_number" />
             </td>
             <td>
-                <input type="text" v-model="editedCar.is_registered" />
+                <select v-model="editedCar.is_registered">
+                    <option value="false">false</option>
+                    <option value="true">true</option>
+                </select>
             </td>
             <td>
                 {{ editedCar.createdAt }}
@@ -165,10 +181,24 @@ function revertCar() {
                 {{ editedCar.updatedAt }}
             </td>
             <td>
+                <!-- <ConfirmBtn :url="'inventory.update'" :editedCar="editedCar" :isEditing="isEditing" /> -->
                 <button @click="updateCar">Confirm</button>
             </td>
             <td>
                 <button @click="revertCar">Revert</button>
+            </td>
+        </tr>
+        <tr v-if="submitErrors">
+            <td colspan="100%">
+                <ul>
+                    <li
+                        v-for="error in submitErrors"
+                        :key="error"
+                        class="text-center text-red-500 font-bold"
+                    >
+                        {{ error }}
+                    </li>
+                </ul>
             </td>
         </tr>
     </thead>

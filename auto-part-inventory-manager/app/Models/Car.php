@@ -15,7 +15,6 @@ class Car extends Model
     protected $fillable = [
         'name',
         'registration_number',
-        'is_registered',
     ];
 
     protected $casts = [
