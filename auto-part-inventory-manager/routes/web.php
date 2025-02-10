@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return Inertia::render('Home');
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
 });
 
 Route::get('/dashboard', function () {
@@ -25,7 +26,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('inventory', CarController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'store']);
+
+    Route::put('/inventory/{car}', [CarController::class, 'update'])
+        ->name('inventory.update');
+
+    Route::delete('/inventory/{car}', [CarController::class, 'destroy'])
+        ->name('inventory.destroy');
 
     // Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 });

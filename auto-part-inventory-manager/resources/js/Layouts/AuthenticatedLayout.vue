@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from "vue";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
-import NavLink from "@/Components/NavLink.vue";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import ApplicationLogo from "@/Components/PremadeBreeze/ApplicationLogo.vue";
+import Dropdown from "@/Components/PremadeBreeze/Dropdown.vue";
+import DropdownLink from "@/Components/PremadeBreeze/DropdownLink.vue";
+import NavLink from "@/Components/PremadeBreeze/NavLink.vue";
+import ResponsiveNavLink from "@/Components/PremadeBreeze/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
 
 const showingNavigationDropdown = ref(false);
@@ -41,7 +41,7 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('inventory.index')"
                                     :active="route().current('inventory.index')"
                                 >
-                                    Dashboard
+                                    Inventory
                                 </NavLink>
                             </div>
                         </div>
@@ -154,7 +154,7 @@ const showingNavigationDropdown = ref(false);
                             :href="route('inventory.index')"
                             :active="route().current('inventory.index')"
                         >
-                            Dashboard
+                            Inventory
                         </ResponsiveNavLink>
                     </div>
 

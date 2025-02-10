@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('serialnumber');
             $table->foreignId('car_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

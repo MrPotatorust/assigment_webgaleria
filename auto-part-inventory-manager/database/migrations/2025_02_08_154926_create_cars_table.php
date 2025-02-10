@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('registration_number')->nullable();
             $table->boolean('is_registered')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

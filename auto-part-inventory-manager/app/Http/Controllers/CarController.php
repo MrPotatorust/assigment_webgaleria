@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
 use App\Models\Car;
+use App\Models\Part;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -65,9 +66,17 @@ class CarController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Car $car)
+    public function update(Request $request, Car $car): RedirectResponse
     {
-        return 'update';
+        $validated = $request->validate([
+            'name' => 'string|max:255',
+            'registration_number' => 'string|max:255',
+            'is_registered' => 'boolean'
+        ]);
+
+        $car->update($validated);
+
+        return redirect()->route('inventory.index')->with('message', 'Car edited successfully.');
     }
 
     /**
@@ -77,7 +86,7 @@ class CarController extends Controller
     {
         // Gate::authorize('delete', $car);
 
-        $car->forceDelete();
+        $car->delete();
 
         return redirect()->route('inventory.index')->with('message', 'Car deleted successfully.');
     }

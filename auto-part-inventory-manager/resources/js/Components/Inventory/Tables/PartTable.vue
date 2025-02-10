@@ -1,5 +1,5 @@
 <script setup>
-import PartRow from "./PartRow.vue";
+import PartRow from "../Rows/PartRow.vue";
 
 defineProps(["car"]);
 </script>

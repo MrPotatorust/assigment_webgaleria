@@ -1,5 +1,5 @@
 <script setup>
-import Car from "./CarRow.vue";
+import Car from "../Rows/CarRow.vue";
 defineProps(["cars"]);
 </script>
 

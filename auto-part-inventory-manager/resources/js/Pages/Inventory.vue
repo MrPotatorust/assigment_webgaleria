@@ -1,7 +1,6 @@
 <script setup>
-import Car from "@/Components/InventoryTable/CarRow.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import BaseTable from "@/Components/InventoryTable/BaseTable.vue";
+import BaseTable from "@/Components/Inventory/Tables/CarTable.vue";
 import { Head } from "@inertiajs/vue3";
 
 defineProps(["cars"]);

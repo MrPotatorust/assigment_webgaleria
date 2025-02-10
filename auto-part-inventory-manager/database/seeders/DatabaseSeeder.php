@@ -17,11 +17,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // User::factory()->create([
-        //     'id' => 2,
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory()->create([
+            'id' => 1,
+            'name' => 'admin@admin.com',
+            'email' => 'admin@admin.com',
+            'password' => bcrypt('admin@admin.com')
+        ]);
 
         Car::factory(10)
         ->has(Part::factory()->count(fake()->numberBetween(3, 5)))

@@ -1,9 +1,9 @@
 <script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import InputError from "@/Components/PremadeBreeze/InputError.vue";
+import InputLabel from "@/Components/PremadeBreeze/InputLabel.vue";
+import PrimaryButton from "@/Components/PremadeBreeze/PrimaryButton.vue";
+import TextInput from "@/Components/PremadeBreeze/TextInput.vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
 
 defineProps({
     mustVerifyEmail: {
