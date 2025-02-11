@@ -1,7 +1,8 @@
 <script setup>
 import Car from "../Rows/CarRow.vue";
 import { router } from "@inertiajs/vue3";
-import { ref, provide } from "vue";
+import { ref, provide, watchEffect } from "vue";
+
 const props = defineProps(["cars"]);
 
 let currentPage = 1;
@@ -12,10 +13,14 @@ const partQuery = ref("");
 
 provide("partQuery", { partQuery });
 
-async function filter() {
+watchEffect(() => (cars.value = props.cars));
+
+async function getCars() {
     try {
         const response = await fetch(
-            `/inventory?page=${currentPage}&car-query=${carQuery.value}&part-query=${partQuery.value}`,
+            `${route("inventory.index")}?page=${currentPage}&car-query=${
+                carQuery.value
+            }&part-query=${partQuery.value}`,
             {
                 headers: {
                     Accept: "application/json",
@@ -24,10 +29,19 @@ async function filter() {
         );
         const data = await response.json();
 
-        cars.value.data = data.data;
+        return data;
     } catch (error) {
-        console.error("Error loading more cars:", error);
-    } finally {
+        console.log(error);
+        return false;
+    }
+}
+
+async function filter() {
+    loading.value = true;
+    const response = await getCars();
+    if (response) {
+        cars.value.last_page = response.last_page;
+        cars.value.data = response.data;
         loading.value = false;
     }
 }
@@ -35,54 +49,48 @@ async function filter() {
 async function loadMore() {
     loading.value = true;
     currentPage++;
-    try {
-        const response = await fetch(
-            `/inventory?page=${currentPage}&car-query=${carQuery.value}&part-query=${partQuery.value}`,
-            {
-                headers: {
-                    Accept: "application/json",
-                },
-            }
-        );
-        const data = await response.json();
 
-        cars.value.data = [...cars.value.data, ...data.data];
-    } catch (error) {
-        console.error("Error loading more cars:", error);
-    } finally {
+    const response = await getCars();
+    if (response) {
+        cars.value.data = [...cars.value.data, ...response.data];
+        cars.value.last_page = response.last_page;
         loading.value = false;
     }
 }
 </script>
 
 <template>
-    <form @submit.prevent="filter">
-        <label>
-            Search for a car
-            <input v-model="carQuery" type="text" />
-        </label>
-        <label>
-            Search for a part by name
-            <input v-model="partQuery" type="text" />
-        </label>
-        <button>Search</button>
+    <form @submit.prevent="filter" class="mb-3">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Search for a car</label>
+                <input v-model="carQuery" type="text" class="form-control" />
+            </div>
+            <div class="form-group col-md-6">
+                <label>Search for a part by name</label>
+                <input v-model="partQuery" type="text" class="form-control" />
+            </div>
+        </div>
+        <button class="btn btn-primary">Search</button>
     </form>
-    <table class="w-6xl border-2 border-gray-300">
-        <thead class="text-lg">
-            <tr class="text-left">
-                <td class="w-16 p-2"></td>
-                <td class="w-16 p-2">#</td>
-                <td class="w-24 p-2">Name</td>
-                <td class="w-16 p-2">Registration number</td>
-                <td class="w-18 p-2">Is registered</td>
-                <td class="w-18 p-2">Created at</td>
-                <td class="w-18 p-2">Updated at</td>
-                <td class="w-16 p-2">Controls</td>
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th style="width: 5%"></th>
+                <th style="width: 5%">#</th>
+                <th style="width: 15%">Name</th>
+                <th style="width: 15%">Registration number</th>
+                <th style="width: 10%">Is registered</th>
+                <th style="width: 15%">Created at</th>
+                <th style="width: 15%">Updated at</th>
+                <th style="width: 15%">Controls</th>
             </tr>
         </thead>
         <Car v-for="car in cars.data" :key="car.id" :car="car" />
     </table>
-    <div class="flex justify-center">
+
+    <div class="text-center mt-3">
         <button
             v-if="currentPage < cars.last_page"
             @click="loadMore"
@@ -93,5 +101,3 @@ async function loadMore() {
         </button>
     </div>
 </template>
-
-<style scoped></style>

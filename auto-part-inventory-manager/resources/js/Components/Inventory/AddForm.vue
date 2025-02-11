@@ -25,39 +25,54 @@ function handleCreate() {
             console.log(errors);
             createErrors.value = errors;
         },
+        preserveScroll: true,
     });
 }
 </script>
 
 <template>
-    <form @submit.prevent="handleCreate">
-        <h2 class="text-xl pt-5">Create car</h2>
-        <label>
-            Name
-            <input v-model="car.name" type="text" name="name" required />
-        </label>
-        <label>
-            Registration number
+    <form @submit.prevent="handleCreate" class="mb-4">
+        <h2 class="h4 pt-5">Create car</h2>
+        <div class="form-group">
+            <label>Name</label>
+            <input
+                v-model="car.name"
+                type="text"
+                class="form-control"
+                name="name"
+                required
+            />
+        </div>
+        <div class="form-group">
+            <label>Registration number</label>
             <input
                 v-model="car.registration_number"
                 type="text"
+                class="form-control"
                 name="registration_number"
                 required
             />
-        </label>
-        <label>
-            Is registered
-            <select v-model="car.is_registered" name="is_registered" required>
+        </div>
+        <div class="form-group">
+            <label>Is registered</label>
+            <select
+                v-model="car.is_registered"
+                class="form-control"
+                name="is_registered"
+                required
+            >
                 <option value="true">true</option>
                 <option value="false">false</option>
             </select>
-        </label>
-        <button class="border-2">Create</button>
-        <ul v-if="createErrors">
-            <li v-for="error in createErrors" class="text-red-500">
+        </div>
+        <button class="btn btn-primary">Create</button>
+        <ul v-if="createErrors" class="mt-2 list-unstyled">
+            <li v-for="error in createErrors" class="text-danger">
                 {{ error }}
             </li>
         </ul>
-        <p v-if="success" class="text-green-500">Successfully created a car.</p>
+        <p v-if="success" class="text-success mt-2">
+            Successfully created a car.
+        </p>
     </form>
 </template>

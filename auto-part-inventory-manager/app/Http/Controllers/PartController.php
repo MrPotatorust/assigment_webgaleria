@@ -20,7 +20,6 @@ class PartController extends Controller
         ->when($search, function ($query) use ($search) {
             $query->where('name', 'like', '%' . $search . '%');
         })
-        ->latest()
         ->paginate(10)
         ->withQueryString();
     

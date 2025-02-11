@@ -1,10 +1,11 @@
 <script setup>
 import PartRow from "../Rows/PartRow.vue";
-import { onMounted, ref, inject } from "vue";
+import { onMounted, ref, inject, watchEffect } from "vue";
 import { router } from "@inertiajs/vue3";
 
 const { partQuery } = inject("partQuery");
-const props = defineProps(["car"]);
+const emits = defineEmits(["disableIsCreating"]);
+const props = defineProps(["car", "isCreating"]);
 const parts = ref({
     data: [],
     last_page: 1,
@@ -14,7 +15,6 @@ const createErrors = ref();
 const success = ref(false);
 const loading = ref(false);
 
-const isCreating = ref(false);
 const newPart = ref({
     name: "",
     serialnumber: "",
@@ -23,7 +23,7 @@ const newPart = ref({
 
 let currentPage = 1;
 
-onMounted(async () => {
+watchEffect(async () => {
     try {
         const response = await fetch(
             route("inventory.part.index", props.car.id) +
@@ -66,10 +66,6 @@ async function loadMore() {
     }
 }
 
-function changeIsCreating() {
-    isCreating.value = !isCreating.value;
-}
-
 function handleCreate() {
     router.post(route("inventory.part.store"), newPart.value, {
         onSuccess: () => {
@@ -85,6 +81,7 @@ function handleCreate() {
             console.log(errors);
             createErrors.value = errors;
         },
+        preserveScroll: true,
     });
 }
 
@@ -93,16 +90,16 @@ function handleCancel() {
         name: "",
         serialnumber: "",
     };
-    isCreating.value = false;
+    emits("disableIsCreating");
 }
 </script>
 
 <template>
     <tr>
-        <td colspan="100%">
-            <table class="w-full border-2 text-left">
-                <thead>
-                    <tr class="font-italic">
+        <td colspan="8" class="p-0 border-0">
+            <table class="table table-bordered table-sm mb-0">
+                <thead class="thead-light">
+                    <tr>
                         <th>Part name</th>
                         <th>Serial number</th>
                         <th>Created at</th>
@@ -111,29 +108,19 @@ function handleCancel() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="!isCreating">
-                        <td colspan="100%">
-                            <button
-                                @click="changeIsCreating"
-                                class="border-2 px-4 py-2"
-                            >
-                                Add part
-                            </button>
-                        </td>
-                    </tr>
-                    <tr v-else>
+                    <tr v-if="isCreating">
                         <td>
                             <input
                                 v-model="newPart.name"
                                 type="text"
-                                class="border p-2"
+                                class="form-control form-control-sm"
                             />
                         </td>
                         <td>
                             <input
                                 v-model="newPart.serialnumber"
                                 type="text"
-                                class="border p-2"
+                                class="form-control form-control-sm"
                             />
                         </td>
                         <td></td>
@@ -141,30 +128,33 @@ function handleCancel() {
                         <td>
                             <button
                                 @click="handleCreate"
-                                class="px-4 py-2 bg-green-500 text-white"
+                                class="btn btn-success btn-sm mr-2"
                             >
                                 Submit
                             </button>
                             <button
                                 @click="handleCancel"
-                                class="px-4 py-2 bg-gray-500 text-white"
+                                class="btn btn-secondary btn-sm"
                             >
                                 Cancel
                             </button>
                         </td>
                     </tr>
                     <tr v-if="createErrors">
-                        <td colspan="100%">
-                            <ul class="text-red-500">
-                                <li v-for="error in createErrors">
+                        <td colspan="5">
+                            <ul class="list-unstyled mb-0">
+                                <li
+                                    v-for="error in createErrors"
+                                    class="text-danger"
+                                >
                                     {{ error }}
                                 </li>
                             </ul>
                         </td>
                     </tr>
                     <tr v-if="success">
-                        <td colspan="100%">
-                            <p class="text-green-500">
+                        <td colspan="5">
+                            <p class="text-success mb-0">
                                 Successfully created a part.
                             </p>
                         </td>
@@ -176,13 +166,16 @@ function handleCancel() {
                     />
                 </tbody>
             </table>
-            <button
-                v-if="currentPage < parts.last_page"
-                @click="loadMore"
-                :disabled="loading"
-            >
-                {{ loading ? "Loading..." : "Load more" }}
-            </button>
+            <div class="text-center mt-2">
+                <button
+                    v-if="currentPage < parts.last_page"
+                    @click="loadMore"
+                    :disabled="loading"
+                    class="btn btn-primary btn-sm"
+                >
+                    {{ loading ? "Loading..." : "Load more" }}
+                </button>
+            </div>
         </td>
     </tr>
 </template>

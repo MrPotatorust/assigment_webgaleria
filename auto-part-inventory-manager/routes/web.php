@@ -17,28 +17,25 @@ Route::get('/', function () {
     // ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
-
-    
-    Route::post('/inventory/car', [CarController::class, 'store'])->name('inventory.car.store');
-    Route::put('/inventory/car/{car}', [CarController::class, 'update'])->name('inventory.car.update');
-    Route::delete('/inventory/car/{car}', [CarController::class, 'destroy'])->name('inventory.car.destroy');
-
-    Route::get('/inventory/part{car}', [PartController::class, 'index'])->name('inventory.part.index');
-    Route::put('/inventory/part/{part}', [PartController::class, 'update'])->name('inventory.part.update');
-    Route::post('/inventory/part', [PartController::class, 'store'])->name('inventory.part.store');
-    Route::delete('/inventory/part/{part}', [PartController::class, 'destroy'])->name('inventory/part.destroy');
     // Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
-});
+// });
+Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
+Route::post('/inventory/car', [CarController::class, 'store'])->name('inventory.car.store');
+Route::put('/inventory/car/{car}', [CarController::class, 'update'])->name('inventory.car.update');
+Route::delete('/inventory/car/{car}', [CarController::class, 'destroy'])->name('inventory.car.destroy');
+Route::get('/inventory/part{car}', [PartController::class, 'index'])->name('inventory.part.index');
+Route::put('/inventory/part/{part}', [PartController::class, 'update'])->name('inventory.part.update');
+Route::post('/inventory/part', [PartController::class, 'store'])->name('inventory.part.store');
+Route::delete('/inventory/part/{part}', [PartController::class, 'destroy'])->name('inventory.part.destroy');
 
     // ->middleware(['auth', 'verified']);
 

@@ -23,7 +23,6 @@ class CarController extends Controller
 
         $carSearch = $request->input('car-query');
         $partSearch = $request->input('part-query');
-        // dd($search);
 
 
         $cars = Car::when($carSearch, function ($query, $carSearch) {
@@ -34,7 +33,6 @@ class CarController extends Controller
                         $subQuery->where('name', 'like', '%' . $partSearch . '%');
                     });
                 })
-                ->latest()
                 ->paginate(20)
                 ->withQueryString();
 
