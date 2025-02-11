@@ -1,12 +1,18 @@
 <script setup>
 import PartRow from "../Rows/PartRow.vue";
-import { ref } from "vue";
+import { onMounted, ref, inject } from "vue";
 import { router } from "@inertiajs/vue3";
 
+const { partQuery } = inject("partQuery");
 const props = defineProps(["car"]);
+const parts = ref({
+    data: [],
+    last_page: 1,
+});
 
 const createErrors = ref();
 const success = ref(false);
+const loading = ref(false);
 
 const isCreating = ref(false);
 const newPart = ref({
@@ -17,25 +23,50 @@ const newPart = ref({
 
 let currentPage = 1;
 
-async function loadMore() {
-    currentPage++;
+onMounted(async () => {
     try {
-        const response = await fetch(`/inventory?page=${currentPage}`, {
-            headers: {
-                Accept: "application/json",
-            },
-        });
+        const response = await fetch(
+            route("inventory.part.index", props.car.id) +
+                `?page=${currentPage}?query=${partQuery}`,
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        );
+        const data = await response.json();
+        parts.value = data;
+    } catch (error) {
+        console.error("Error loading parts:", error);
+    }
+});
+
+async function loadMore() {
+    if (loading.value) return;
+    loading.value = true;
+    currentPage++;
+
+    try {
+        const response = await fetch(
+            route("inventory.part.index", props.car.id) +
+                `?page=${currentPage}?query=${partQuery}`,
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        );
         const data = await response.json();
 
-        // Append new cars to existing list
-        props.parts.data = [...props.parts.data, ...data.data];
-        props.parts.next_page_url = data.next_page_url;
+        parts.value.data = [...parts.value.data, ...data.data];
     } catch (error) {
         console.error("Error loading more parts:", error);
+    } finally {
+        loading.value = false;
     }
 }
 
-function changeAddingPart() {
+function changeIsCreating() {
     isCreating.value = !isCreating.value;
 }
 
@@ -70,49 +101,87 @@ function handleCancel() {
     <tr>
         <td colspan="100%">
             <table class="w-full border-2 text-left">
-                <tr class="font-italic">
-                    <th>Part name</th>
-                    <th>Serial number</th>
-                    <th>Created at</th>
-                    <th>Updated at</th>
-                    <th>Controls</th>
-                </tr>
-                <tr v-if="!isCreating">
-                    <td colspan="100%">
-                        <button @click="changeAddingPart" class="border 2">
-                            Add part
-                        </button>
-                    </td>
-                </tr>
-                <tr v-else>
-                    <td>
-                        <input v-model="newPart.name" type="text" />
-                    </td>
-                    <td>
-                        <input v-model="newPart.serialnumber" type="text" />
-                    </td>
-                    <td><button @click="handleCreate">Submit</button></td>
-                    <td><button @click="handleCancel">Cancel</button></td>
-                </tr>
-                <tr v-if="createErrors">
-                    <ul>
-                        <li v-for="error in createErrors">{{ error }}</li>
-                    </ul>
-                </tr>
-                <tr v-if="success">
-                    <p class="text-green-500">Successfully created a part.</p>
-                </tr>
-                <PartRow
-                    v-for="part in props.car.parts"
-                    :key="part.id"
-                    :part="part"
-                />
+                <thead>
+                    <tr class="font-italic">
+                        <th>Part name</th>
+                        <th>Serial number</th>
+                        <th>Created at</th>
+                        <th>Updated at</th>
+                        <th>Controls</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-if="!isCreating">
+                        <td colspan="100%">
+                            <button
+                                @click="changeIsCreating"
+                                class="border-2 px-4 py-2"
+                            >
+                                Add part
+                            </button>
+                        </td>
+                    </tr>
+                    <tr v-else>
+                        <td>
+                            <input
+                                v-model="newPart.name"
+                                type="text"
+                                class="border p-2"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                v-model="newPart.serialnumber"
+                                type="text"
+                                class="border p-2"
+                            />
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button
+                                @click="handleCreate"
+                                class="px-4 py-2 bg-green-500 text-white"
+                            >
+                                Submit
+                            </button>
+                            <button
+                                @click="handleCancel"
+                                class="px-4 py-2 bg-gray-500 text-white"
+                            >
+                                Cancel
+                            </button>
+                        </td>
+                    </tr>
+                    <tr v-if="createErrors">
+                        <td colspan="100%">
+                            <ul class="text-red-500">
+                                <li v-for="error in createErrors">
+                                    {{ error }}
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr v-if="success">
+                        <td colspan="100%">
+                            <p class="text-green-500">
+                                Successfully created a part.
+                            </p>
+                        </td>
+                    </tr>
+                    <PartRow
+                        v-for="part in parts.data"
+                        :key="part.id"
+                        :part="part"
+                    />
+                </tbody>
             </table>
             <button
-                v-if="currentPage < props.parts.last_page"
+                v-if="currentPage < parts.last_page"
                 @click="loadMore"
+                :disabled="loading"
             >
-                Load more
+                {{ loading ? "Loading..." : "Load more" }}
             </button>
         </td>
     </tr>

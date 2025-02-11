@@ -1,30 +1,72 @@
 <script setup>
 import Car from "../Rows/CarRow.vue";
 import { router } from "@inertiajs/vue3";
+import { ref, provide } from "vue";
 const props = defineProps(["cars"]);
 
-// console.log(props.cars);
 let currentPage = 1;
+const cars = ref(props.cars);
+const loading = ref(false);
+const carQuery = ref("");
+const partQuery = ref("");
 
-async function loadMore() {
-    currentPage++;
+provide("partQuery", { partQuery });
+
+async function filter() {
     try {
-        const response = await fetch(`/inventory?page=${currentPage}`, {
-            headers: {
-                Accept: "application/json",
-            },
-        });
+        const response = await fetch(
+            `/inventory?page=${currentPage}&car-query=${carQuery.value}&part-query=${partQuery.value}`,
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        );
         const data = await response.json();
 
-        props.cars.data = [...props.cars.data, ...data.data];
-        props.cars.next_page_url = data.next_page_url;
+        cars.value.data = data.data;
     } catch (error) {
         console.error("Error loading more cars:", error);
+    } finally {
+        loading.value = false;
+    }
+}
+
+async function loadMore() {
+    loading.value = true;
+    currentPage++;
+    try {
+        const response = await fetch(
+            `/inventory?page=${currentPage}&car-query=${carQuery.value}&part-query=${partQuery.value}`,
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        );
+        const data = await response.json();
+
+        cars.value.data = [...cars.value.data, ...data.data];
+    } catch (error) {
+        console.error("Error loading more cars:", error);
+    } finally {
+        loading.value = false;
     }
 }
 </script>
 
 <template>
+    <form @submit.prevent="filter">
+        <label>
+            Search for a car
+            <input v-model="carQuery" type="text" />
+        </label>
+        <label>
+            Search for a part by name
+            <input v-model="partQuery" type="text" />
+        </label>
+        <button>Search</button>
+    </form>
     <table class="w-6xl border-2 border-gray-300">
         <thead class="text-lg">
             <tr class="text-left">
@@ -38,9 +80,18 @@ async function loadMore() {
                 <td class="w-16 p-2">Controls</td>
             </tr>
         </thead>
-        <Car v-for="car in props.cars.data" :key="car.id" :car="car" />
+        <Car v-for="car in cars.data" :key="car.id" :car="car" />
     </table>
-    <button v-if="currentPage < props.cars.last_page" @click="loadMore">
-        Load more
-    </button>
+    <div class="flex justify-center">
+        <button
+            v-if="currentPage < cars.last_page"
+            @click="loadMore"
+            :disabled="loading"
+            class="btn btn-primary"
+        >
+            {{ loading ? "Loading..." : "Load more" }}
+        </button>
+    </div>
 </template>
+
+<style scoped></style>

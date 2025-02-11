@@ -25,13 +25,13 @@ function changeEditing() {
 
 function deletePart() {
     if (confirm("Are you sure?")) {
-        router.delete(route("inventory/part.destroy", props.part.id));
+        router.delete(route("inventory.part.destroy", props.part.id));
     }
 }
 
 function updatePart() {
     if (confirm("Are you sure?")) {
-        router.put(route("inventory/part.update", props.part.id), part.value, {
+        router.put(route("inventory.part.update", props.part.id), part.value, {
             onSuccess: () => {
                 isEditing.value = false;
                 submitErrors.value = null;

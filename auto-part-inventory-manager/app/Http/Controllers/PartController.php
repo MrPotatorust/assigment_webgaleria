@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Part;
+use App\Models\Car;
 use Illuminate\Http\Request;
 
 class PartController extends Controller
@@ -10,9 +11,19 @@ class PartController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, Car $car)
     {
-        $parts = Part::latest()->paginate(10);
+
+        $search = $request->input("query");
+
+        $parts = Part::whereBelongsTo($car)
+        ->when($search, function ($query) use ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        })
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
+    
 
         return response()->json($parts);
     }

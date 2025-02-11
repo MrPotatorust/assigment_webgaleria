@@ -9,7 +9,3 @@ defineProps(["cars"]);
         <CarTable :cars="cars" />
     </div>
 </template>
-
-<style scoped>
-@import url("https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css");
-</style>

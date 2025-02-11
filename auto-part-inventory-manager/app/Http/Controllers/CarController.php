@@ -20,13 +20,27 @@ class CarController extends Controller
      */
     public function index(Request $request)
     {
-        $cars = Car::latest()->paginate(20);
 
-        if ($request->wantsJson()){
-            return response()->json($cars);
-        }
+        $carSearch = $request->input('car-query');
+        $partSearch = $request->input('part-query');
+        // dd($search);
 
-        return Inertia::render('Inventory', ['cars' => $cars]);
+
+        $cars = Car::when($carSearch, function ($query, $carSearch) {
+                    return $query->where('name', 'like', '%' . $carSearch . '%');
+                })
+                ->when($partSearch, function ($query, $partSearch){
+                    return $query->whereHas('parts', function ($subQuery) use ($partSearch) {
+                        $subQuery->where('name', 'like', '%' . $partSearch . '%');
+                    });
+                })
+                ->latest()
+                ->paginate(20)
+                ->withQueryString();
+
+        return $request->wantsJson()
+            ? response()->json($cars)
+            : Inertia::render('Inventory', ['cars' => $cars]);
     }
 
     /**
@@ -49,7 +63,7 @@ class CarController extends Controller
         
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'registration_number' => $request->is_registered ? 'required|string|max:255' : 'nullable|string|max:255',
+            'registration_number' => $request->is_registered ? 'required|integer|digits_between:1,10' : 'nullable|integer|digits_between:1,10',
             'is_registered' => 'required|boolean'
         ]);
         
@@ -86,9 +100,9 @@ class CarController extends Controller
 
         // dd($request->is_registered);
         $validated = $request->validate([
-            'name' => 'string|max:255',
-            'registration_number' => 'nullable|integer',
-            'is_registered' => 'boolean'
+            'name' => 'required|string|max:255',
+            'registration_number' => $request->is_registered ? 'required|integer|digits_between:1,10' : 'nullable|integer|digits_between:1,10',
+            'is_registered' => 'required|boolean'
         ]);
 
 

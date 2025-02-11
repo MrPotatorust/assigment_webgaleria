@@ -23,7 +23,7 @@ watchEffect(() => {
 
 function deleteCar() {
     if (confirm("Are you sure?")) {
-        router.delete(route("inventory/car.destroy", props.car.id));
+        router.delete(route("inventory.car.destroy", props.car.id));
     }
 }
 
@@ -175,7 +175,7 @@ function revertCar() {
                 {{ car.updatedAt }}
             </td>
             <td>
-                <!-- <ConfirmBtn :url="'inventory/car.update'" :car="car" :isEditing="isEditing" /> -->
+                <!-- <ConfirmBtn :url="'inventory.car.update'" :car="car" :isEditing="isEditing" /> -->
                 <button @click="updateCar">Confirm</button>
             </td>
             <td>
