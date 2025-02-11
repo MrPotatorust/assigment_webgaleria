@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, computed } from "vue";
 import { router } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import PartTable from "../Tables/PartTable.vue";
@@ -9,12 +9,11 @@ const isShown = ref(false);
 const isEditing = ref(false);
 const submitErrors = ref();
 
-const createdAt = dayjs(props.car.created_at).format("YYYY-MM-DD HH:mm");
-const updatedAt = dayjs(props.car.updated_at).format("YYYY-MM-DD HH:mm");
-
 const car = ref({});
 
 watchEffect(() => {
+    const createdAt = dayjs(props.car.created_at).format("YYYY-MM-DD HH:mm");
+    const updatedAt = dayjs(props.car.updated_at).format("YYYY-MM-DD HH:mm");
     car.value = {
         ...props.car,
         createdAt: createdAt,

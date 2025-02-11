@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import BaseTable from "@/Components/Inventory/Tables/CarTable.vue";
+import InventoryComponent from "@/Components/Inventory/InventoryComponent.vue";
 import { Head } from "@inertiajs/vue3";
 
 defineProps(["cars"]);
@@ -18,7 +19,7 @@ defineProps(["cars"]);
 
         <main>
             <div class="justify-items-center">
-                <BaseTable :cars="cars" />
+                <InventoryComponent :cars="cars" />
             </div>
         </main>
     </AuthenticatedLayout>

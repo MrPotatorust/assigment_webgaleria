@@ -18,9 +18,14 @@ class CarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cars = Car::with('parts')->get();
+        $cars = Car::latest()->paginate(20);
+
+        if ($request->wantsJson()){
+            return response()->json($cars);
+        }
+
         return Inertia::render('Inventory', ['cars' => $cars]);
     }
 
@@ -36,14 +41,18 @@ class CarController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   
 
+        $isRegistered = filter_var($request->is_registered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        $request->merge(['is_registered' => $isRegistered]);
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'registration_number' => $request->is_registered ? 'required|string|max:255' : 'nullable|string|max:255',
-            'is_registered' => 'boolean'
+            'is_registered' => 'required|boolean'
         ]);
-
+        
         Car::create($validated);
 
         return redirect(route('inventory.index'));

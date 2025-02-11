@@ -1,6 +1,27 @@
 <script setup>
 import Car from "../Rows/CarRow.vue";
-defineProps(["cars"]);
+import { router } from "@inertiajs/vue3";
+const props = defineProps(["cars"]);
+
+// console.log(props.cars);
+let currentPage = 1;
+
+async function loadMore() {
+    currentPage++;
+    try {
+        const response = await fetch(`/inventory?page=${currentPage}`, {
+            headers: {
+                Accept: "application/json",
+            },
+        });
+        const data = await response.json();
+
+        props.cars.data = [...props.cars.data, ...data.data];
+        props.cars.next_page_url = data.next_page_url;
+    } catch (error) {
+        console.error("Error loading more cars:", error);
+    }
+}
 </script>
 
 <template>
@@ -17,6 +38,9 @@ defineProps(["cars"]);
                 <td class="w-16 p-2">Controls</td>
             </tr>
         </thead>
-        <Car v-for="car in cars" :key="car.id" :car="car" />
+        <Car v-for="car in props.cars.data" :key="car.id" :car="car" />
     </table>
+    <button v-if="currentPage < props.cars.last_page" @click="loadMore">
+        Load more
+    </button>
 </template>

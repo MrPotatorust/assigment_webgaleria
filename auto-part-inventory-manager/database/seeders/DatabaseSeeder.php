@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('admin@admin.com')
         ]);
 
-        Car::factory(10)
+        Car::factory(50)
         ->has(Part::factory()->count(fake()->numberBetween(3, 5)))
         ->create();
     }

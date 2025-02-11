@@ -9,10 +9,9 @@ const isEditing = ref(false);
 const submitErrors = ref();
 const part = ref({});
 
-const createdAt = dayjs(props.part.created_at).format("YYYY-MM-DD HH:mm");
-const updatedAt = dayjs(props.part.updated_at).format("YYYY-MM-DD HH:mm");
-
 watchEffect(() => {
+    const createdAt = dayjs(props.part.created_at).format("YYYY-MM-DD HH:mm");
+    const updatedAt = dayjs(props.part.updated_at).format("YYYY-MM-DD HH:mm");
     part.value = {
         ...props.part,
         createdAt: createdAt,
@@ -77,5 +76,18 @@ function revertPart() {
         <td>{{ part.updatedAt }}</td>
         <td><button @click="updatePart">Confirm</button></td>
         <td><button @click="revertPart">Revert</button></td>
+    </tr>
+    <tr v-if="submitErrors">
+        <td colspan="100%">
+            <ul>
+                <li
+                    v-for="error in submitErrors"
+                    :key="error"
+                    class="text-center text-red-500 font-bold"
+                >
+                    {{ error }}
+                </li>
+            </ul>
+        </td>
     </tr>
 </template>

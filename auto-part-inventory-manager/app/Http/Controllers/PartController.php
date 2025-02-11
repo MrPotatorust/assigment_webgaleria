@@ -10,9 +10,11 @@ class PartController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $parts = Part::latest()->paginate(10);
+
+        return response()->json($parts);
     }
 
     /**
@@ -28,7 +30,15 @@ class PartController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'serialnumber' => 'required|string|max:255',
+            'car_id' => 'required|exists:cars,id'
+        ]);
+
+        Part::create($validated);
+
+        return redirect()->route('inventory.index')->with('message', 'Part successfully created.');
     }
 
     /**
@@ -55,9 +65,9 @@ class PartController extends Controller
         // dd($request->is_registered);
         $validated = $request->validate([
             'name' => 'string|max:255',
-            'serialnumber' => 'nullable|integer',
+            'serialnumber' => 'nullable|string',
         ]);
-
+        
 
         $part->update($validated);
 
