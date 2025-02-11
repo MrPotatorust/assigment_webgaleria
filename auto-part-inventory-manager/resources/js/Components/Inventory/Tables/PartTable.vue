@@ -13,6 +13,7 @@ defineProps(["car"]);
                     <th>Serial number</th>
                     <th>Created at</th>
                     <th>Updated at</th>
+                    <th>Controls</th>
                 </tr>
                 <PartRow
                     v-for="part in car.parts"

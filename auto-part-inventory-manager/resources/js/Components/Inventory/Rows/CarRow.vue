@@ -1,13 +1,8 @@
 <script setup>
-import Part from "./PartRow.vue";
 import { ref, watchEffect } from "vue";
-import { Link, router } from "@inertiajs/vue3";
-import PartTable from "../Tables/PartTable.vue";
+import { router } from "@inertiajs/vue3";
 import dayjs from "dayjs";
-import ConfirmBtn from "../Buttons/ConfirmBtn.vue";
-import DeleteBtn from "../Buttons/DeleteBtn.vue";
-import EditBtn from "../Buttons/EditBtn.vue";
-import RevertBtn from "../Buttons/RevertBtn.vue";
+import PartTable from "../Tables/PartTable.vue";
 const props = defineProps(["car"]);
 
 const isShown = ref(false);
@@ -17,10 +12,10 @@ const submitErrors = ref();
 const createdAt = dayjs(props.car.created_at).format("YYYY-MM-DD HH:mm");
 const updatedAt = dayjs(props.car.updated_at).format("YYYY-MM-DD HH:mm");
 
-const editedCar = ref({});
+const car = ref({});
 
 watchEffect(() => {
-    editedCar.value = {
+    car.value = {
         ...props.car,
         createdAt: createdAt,
         updatedAt: updatedAt,
@@ -29,7 +24,7 @@ watchEffect(() => {
 
 function deleteCar() {
     if (confirm("Are you sure?")) {
-        router.delete(route("inventory.destroy", props.car.id));
+        router.delete(route("inventory/car.destroy", props.car.id));
     }
 }
 
@@ -43,7 +38,7 @@ function changeEditing() {
 
 function updateCar() {
     if (confirm("Are you sure?")) {
-        router.put(route("inventory.update", props.car.id), editedCar.value, {
+        router.put(route("inventory/car.update", props.car.id), car.value, {
             onSuccess: () => {
                 isEditing.value = false;
                 submitErrors.value = null;
@@ -57,7 +52,7 @@ function updateCar() {
 }
 
 function revertCar() {
-    editedCar.value = {
+    car.value = {
         ...props.car,
         createdAt: createdAt,
         updatedAt: updatedAt,
@@ -103,19 +98,19 @@ function revertCar() {
                     </svg>
                 </button>
             </td>
-            <td>{{ editedCar.id }}</td>
+            <td>{{ car.id }}</td>
             <td>
-                {{ editedCar.name }}
+                {{ car.name }}
             </td>
             <td>
-                {{ editedCar.registration_number }}
+                {{ car.registration_number }}
             </td>
-            <td>{{ editedCar.is_registered }}</td>
+            <td>{{ car.is_registered }}</td>
             <td>
-                {{ editedCar.createdAt }}
+                {{ car.createdAt }}
             </td>
             <td>
-                {{ editedCar.updatedAt }}
+                {{ car.updatedAt }}
             </td>
             <td>
                 <button @click="deleteCar">Delete</button>
@@ -163,25 +158,25 @@ function revertCar() {
                 {{ props.car.id }}
             </td>
             <td>
-                <input type="text" v-model="editedCar.name" />
+                <input type="text" v-model="car.name" />
             </td>
             <td>
-                <input type="text" v-model="editedCar.registration_number" />
+                <input type="text" v-model="car.registration_number" />
             </td>
             <td>
-                <select v-model="editedCar.is_registered">
+                <select v-model="car.is_registered">
                     <option value="false">false</option>
                     <option value="true">true</option>
                 </select>
             </td>
             <td>
-                {{ editedCar.createdAt }}
+                {{ car.createdAt }}
             </td>
             <td>
-                {{ editedCar.updatedAt }}
+                {{ car.updatedAt }}
             </td>
             <td>
-                <!-- <ConfirmBtn :url="'inventory.update'" :editedCar="editedCar" :isEditing="isEditing" /> -->
+                <!-- <ConfirmBtn :url="'inventory/car.update'" :car="car" :isEditing="isEditing" /> -->
                 <button @click="updateCar">Confirm</button>
             </td>
             <td>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\PartController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,10 +28,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 
-    Route::put('/inventory/{car}', [CarController::class, 'update'])->name('inventory.update');
+    Route::put('/inventory/car/{car}', [CarController::class, 'update'])->name('inventory/car.update');
 
-    Route::delete('/inventory/{car}', [CarController::class, 'destroy'])->name('inventory.destroy');
+    Route::delete('/inventory/car/{car}', [CarController::class, 'destroy'])->name('inventory/car.destroy');
 
+    Route::put('/inventory/part/{part}', [PartController::class, 'update'])->name('inventory/part.update');
+
+    Route::delete('/inventory/part/{part}', [PartController::class, 'destroy'])->name('inventory/part.destroy');
     // Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 });
 

@@ -73,12 +73,12 @@ class CarController extends Controller
 
         $isRegistered = filter_var($request->is_registered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
-        // $request->merge(['is_registered' => $isRegistered]);
+        $request->merge(['is_registered' => $isRegistered]);
 
         // dd($request->is_registered);
         $validated = $request->validate([
             'name' => 'string|max:255',
-            'registration_number' => 'string|max:255',
+            'registration_number' => 'nullable|integer',
             'is_registered' => 'boolean'
         ]);
 

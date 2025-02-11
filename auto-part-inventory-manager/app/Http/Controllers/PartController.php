@@ -52,7 +52,17 @@ class PartController extends Controller
      */
     public function update(Request $request, Part $part)
     {
-        //
+        // dd($request->is_registered);
+        $validated = $request->validate([
+            'name' => 'string|max:255',
+            'serialnumber' => 'nullable|integer',
+        ]);
+
+
+        $part->update($validated);
+
+        return redirect()->route('inventory.index')->with('message', 'Car edited successfully.');
+
     }
 
     /**
@@ -60,6 +70,8 @@ class PartController extends Controller
      */
     public function destroy(Part $part)
     {
-        //
+        $part->delete();
+
+        return redirect()->route('inventory.index')->with('message', 'Car deleted successfully.');
     }
 }
