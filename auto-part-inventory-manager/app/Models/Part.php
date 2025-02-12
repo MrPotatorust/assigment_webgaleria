@@ -19,9 +19,6 @@ class Part extends Model
         'car_id'
     ];
 
-    protected $casts = [
-        'is_private' => 'boolean'
-    ];
 
     public function car(): BelongsTo
     {

@@ -31,7 +31,6 @@ async function getCars() {
 
         return data;
     } catch (error) {
-        console.log(error);
         return false;
     }
 }
@@ -60,6 +59,7 @@ async function loadMore() {
 </script>
 
 <template>
+    <h3>Filter</h3>
     <form @submit.prevent="filter" class="mb-3">
         <div class="form-row">
             <div class="form-group col-md-6">

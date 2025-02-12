@@ -28,7 +28,9 @@ function changeEditing() {
 
 function deletePart() {
     if (confirm("Are you sure?")) {
-        router.delete(route("inventory.part.destroy", props.part.id));
+        router.delete(route("inventory.part.destroy", props.part.id), {
+            preserveScroll: true,
+        });
     }
 }
 
@@ -42,6 +44,7 @@ function updatePart() {
             onError: (errors) => {
                 submitErrors.value = errors;
             },
+            preserveScroll: true,
         });
         changeEditing();
     }

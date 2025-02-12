@@ -78,7 +78,6 @@ function handleCreate() {
             success.value = true;
         },
         onError: (errors) => {
-            console.log(errors);
             createErrors.value = errors;
         },
         preserveScroll: true,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\CarRequest;
 use App\Models\Car;
 use App\Models\Part;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,6 @@ class CarController extends Controller
 
         $carSearch = $request->input('car-query');
         $partSearch = $request->input('part-query');
-
 
         $cars = Car::when($carSearch, function ($query, $carSearch) {
                     return $query->where('name', 'like', '%' . $carSearch . '%');
@@ -52,20 +52,10 @@ class CarController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CarRequest $request)
     {   
-
-        $isRegistered = filter_var($request->is_registered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-
-        $request->merge(['is_registered' => $isRegistered]);
         
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'registration_number' => $request->is_registered ? 'required|integer|digits_between:1,10' : 'nullable|integer|digits_between:1,10',
-            'is_registered' => 'required|boolean'
-        ]);
-        
-        Car::create($validated);
+        Car::create($request->validated());
 
         return redirect(route('inventory.index'));
     }
@@ -89,22 +79,11 @@ class CarController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Car $car)
+    public function update(CarRequest $request, Car $car)
     {
 
-        $isRegistered = filter_var($request->is_registered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
-        $request->merge(['is_registered' => $isRegistered]);
-
-        // dd($request->is_registered);
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'registration_number' => $request->is_registered ? 'required|integer|digits_between:1,10' : 'nullable|integer|digits_between:1,10',
-            'is_registered' => 'required|boolean'
-        ]);
-
-
-        $car->update($validated);
+        $car->update($request->validated());
 
         return redirect()->route('inventory.index')->with('message', 'Car edited successfully.');
     }

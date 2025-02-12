@@ -54,7 +54,6 @@ function updateCar() {
     if (confirm("Are you sure?")) {
         router.put(route("inventory.car.update", props.car.id), car.value, {
             onSuccess: () => {
-                console.log("f");
                 isEditing.value = false;
                 submitErrors.value = null;
             },

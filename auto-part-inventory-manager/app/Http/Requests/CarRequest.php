@@ -11,7 +11,7 @@ class CarRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,13 @@ class CarRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isRegistered = filter_var($this->is_registered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        $this->merge(['is_registered' => $isRegistered]);
+
         return [
-            //
+            'name' => 'required|string|max:255',
+            'registration_number' => $this->is_registered ? 'required|integer|digits_between:1,10' : 'nullable|integer|digits_between:1,10',
+            'is_registered' => 'required|boolean',
         ];
     }
 }

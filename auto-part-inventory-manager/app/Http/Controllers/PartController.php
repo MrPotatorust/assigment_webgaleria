@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Part;
+use App\Http\Requests\PartRequest;
 use App\Models\Car;
 use Illuminate\Http\Request;
 
@@ -38,15 +39,10 @@ class PartController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PartRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'serialnumber' => 'required|string|max:255',
-            'car_id' => 'required|exists:cars,id'
-        ]);
 
-        Part::create($validated);
+        Part::create($request->validated());
 
         return redirect()->route('inventory.index')->with('message', 'Part successfully created.');
     }
@@ -70,16 +66,12 @@ class PartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Part $part)
+    public function update(PartRequest $request, Part $part)
     {
         // dd($request->is_registered);
-        $validated = $request->validate([
-            'name' => 'string|max:255',
-            'serialnumber' => 'nullable|string',
-        ]);
         
 
-        $part->update($validated);
+        $part->update($request->validated());
 
         return redirect()->route('inventory.index')->with('message', 'Car edited successfully.');
 
