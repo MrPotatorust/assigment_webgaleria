@@ -15,7 +15,7 @@ Route::get('/', function () {
     //     'laravelVersion' => Application::VERSION,
     //     'phpVersion' => PHP_VERSION,
     // ]);
-});
+}) ->name('home');
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
@@ -28,12 +28,16 @@ Route::get('/', function () {
 
     // Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 // });
+
+//? Car routes
 Route::get('/inventory', [CarController::class, 'index'])->name('inventory.index');
 Route::post('/inventory/car', [CarController::class, 'store'])->name('inventory.car.store');
 Route::put('/inventory/car/{car}', [CarController::class, 'update'])->name('inventory.car.update');
 Route::delete('/inventory/car/{car}', [CarController::class, 'destroy'])->name('inventory.car.destroy');
 Route::get('/inventory/part{car}', [PartController::class, 'index'])->name('inventory.part.index');
 Route::put('/inventory/part/{part}', [PartController::class, 'update'])->name('inventory.part.update');
+
+//? Part Routes
 Route::post('/inventory/part', [PartController::class, 'store'])->name('inventory.part.store');
 Route::delete('/inventory/part/{part}', [PartController::class, 'destroy'])->name('inventory.part.destroy');
 

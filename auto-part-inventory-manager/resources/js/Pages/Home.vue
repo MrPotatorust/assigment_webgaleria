@@ -6,38 +6,33 @@ import { Link } from "@inertiajs/vue3";
 
 <template>
     <GuestLayout>
-        <div class="min-h-screen flex items-center justify-center">
-            <div class="text-center max-w-2xl">
-                <!-- Laravel-style logo -->
-                <div class="mb-8 flex justify-center">
-                    <svg
-                        class="h-16 w-16 text-red-600"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                        />
-                    </svg>
+        <main class="container my-auto">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <div class="card shadow">
+                        <div class="card-body p-5">
+                            <h1 class="display-4 mb-4 text-primary">
+                                <i class="bi bi-boxes"></i> Inventory Management
+                                System
+                            </h1>
+                            <p class="lead mb-4">
+                                This is an assigment project. It is only a very
+                                basic version.
+                            </p>
+                            <div
+                                class="d-grid gap-2 d-sm-flex justify-content-sm-center"
+                            >
+                                <Link
+                                    :href="route('inventory.index')"
+                                    class="btn btn-primary btn-lg px-4 gap-3"
+                                >
+                                    <i class="bi bi-list-ul"></i> View Inventory
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <h1 class="text-4xl font-bold text-gray-800 mb-4">
-                    Welcome to the Inventory System
-                </h1>
-
-                <p class="text-xl text-gray-600 mb-8">
-                    Please head over to the
-                    <span class="text-red-600 font-medium">Inventory Tab</span>
-                    in the navigation to manage your products.
-                </p>
-
-                <a
-                    :href="route('inventory.index')"
-                    class="inline-block bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors text-lg font-medium shadow-sm hover:shadow-md"
-                >
-                    Go to Inventory →
-                </a>
             </div>
-        </div>
+        </main>
     </GuestLayout>
 </template>

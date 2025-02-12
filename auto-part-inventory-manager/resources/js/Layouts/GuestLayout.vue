@@ -4,10 +4,14 @@ import { Link } from "@inertiajs/vue3";
 
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <!-- Logo -->
-
-        <a :href="route('inventory.index')" class="navbar-brand mb-0 ml-4 h1"
-            >Inventory</a
+        <Link
+            :href="route('home')"
+            class="navbar-brand mb-0 ml-4 h1"
+            style="margin-left: 1em"
+            >Home</Link
+        >
+        <Link :href="route('inventory.index')" class="navbar-brand mb-0 ml-4 h1"
+            >Inventory</Link
         >
 
         <!-- Navigation Links -->
