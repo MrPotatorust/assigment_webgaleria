@@ -67,7 +67,7 @@ function revertPart() {
         <td>{{ part.serialnumber }}</td>
         <td>{{ part.createdAt }}</td>
         <td>{{ part.updatedAt }}</td>
-        <td>
+        <td class="equal-spacing">
             <button @click="deletePart" class="btn btn-danger btn-sm mr-2">
                 Delete
             </button>
@@ -95,7 +95,7 @@ function revertPart() {
         </td>
         <td>{{ part.createdAt }}</td>
         <td>{{ part.updatedAt }}</td>
-        <td>
+        <td class="equal-spacing">
             <button @click="updatePart" class="btn btn-success btn-sm mr-2">
                 Confirm
             </button>

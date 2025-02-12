@@ -21,6 +21,8 @@ class PartController extends Controller
         ->when($search, function ($query) use ($search) {
             $query->where('name', 'like', '%' . $search . '%');
         })
+        ->orderBy('created_at', 'desc')
+        ->orderBy('id', 'desc')
         ->paginate(10)
         ->withQueryString();
     

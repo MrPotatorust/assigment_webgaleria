@@ -33,6 +33,8 @@ class CarController extends Controller
                         $subQuery->where('name', 'like', '%' . $partSearch . '%');
                     });
                 })
+                ->orderBy('created_at', 'desc')
+                ->orderBy('id', 'desc')
                 ->paginate(20)
                 ->withQueryString();
 

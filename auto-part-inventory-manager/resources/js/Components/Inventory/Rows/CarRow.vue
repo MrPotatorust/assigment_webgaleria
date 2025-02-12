@@ -123,7 +123,7 @@ function revertCar() {
             <td>{{ car.is_registered }}</td>
             <td>{{ car.createdAt }}</td>
             <td>{{ car.updatedAt }}</td>
-            <td>
+            <td class="equal-spacing">
                 <button @click="deleteCar" class="btn btn-danger btn-sm mr-2">
                     Delete
                 </button>

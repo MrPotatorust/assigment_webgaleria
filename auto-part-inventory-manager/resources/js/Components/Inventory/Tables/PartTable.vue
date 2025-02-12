@@ -124,10 +124,11 @@ function handleCancel() {
                         </td>
                         <td></td>
                         <td></td>
-                        <td>
+                        <td class="equal-spacing">
                             <button
                                 @click="handleCreate"
-                                class="btn btn-success btn-sm mr-2"
+                                class="btn btn-success btn-sm"
+                                style=""
                             >
                                 Submit
                             </button>
@@ -158,11 +159,20 @@ function handleCancel() {
                             </p>
                         </td>
                     </tr>
-                    <PartRow
-                        v-for="part in parts.data"
-                        :key="part.id"
-                        :part="part"
-                    />
+                    <template v-if="!parts.data || parts.data.length === 0">
+                        <tr>
+                            <td colspan="100%" class="text-center text-danger">
+                                No Parts as of yet!
+                            </td>
+                        </tr>
+                    </template>
+                    <template v-else>
+                        <PartRow
+                            v-for="part in parts.data"
+                            :key="part.id"
+                            :part="part"
+                        />
+                    </template>
                 </tbody>
             </table>
             <div class="text-center mt-2">

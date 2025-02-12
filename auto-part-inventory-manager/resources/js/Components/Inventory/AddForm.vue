@@ -64,7 +64,7 @@ function handleCreate() {
                 <option value="false">false</option>
             </select>
         </div>
-        <button class="btn btn-primary">Create</button>
+        <button class="btn btn-primary mt-3">Create</button>
         <ul v-if="createErrors" class="mt-2 list-unstyled">
             <li v-for="error in createErrors" class="text-danger">
                 {{ error }}

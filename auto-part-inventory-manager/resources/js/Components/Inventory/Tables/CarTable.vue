@@ -37,6 +37,7 @@ async function getCars() {
 
 async function filter() {
     loading.value = true;
+    currentPage = 1;
     const response = await getCars();
     if (response) {
         cars.value.last_page = response.last_page;
@@ -71,7 +72,7 @@ async function loadMore() {
                 <input v-model="partQuery" type="text" class="form-control" />
             </div>
         </div>
-        <button class="btn btn-primary">Search</button>
+        <button class="btn btn-primary mt-3">Search</button>
     </form>
 
     <table class="table table-bordered table-striped">
