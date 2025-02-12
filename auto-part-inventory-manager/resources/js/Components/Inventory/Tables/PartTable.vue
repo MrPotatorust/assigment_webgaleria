@@ -24,6 +24,7 @@ const newPart = ref({
 let currentPage = 1;
 
 watchEffect(async () => {
+    loading.value = true;
     try {
         const response = await fetch(
             route("inventory.part.index", props.car.id) +
@@ -39,13 +40,10 @@ watchEffect(async () => {
     } catch (error) {
         console.error("Error loading parts:", error);
     }
+    loading.value = false;
 });
 
-async function loadMore() {
-    if (loading.value) return;
-    loading.value = true;
-    currentPage++;
-
+async function getParts() {
     try {
         const response = await fetch(
             route("inventory.part.index", props.car.id) +
@@ -58,10 +56,20 @@ async function loadMore() {
         );
         const data = await response.json();
 
-        parts.value.data = [...parts.value.data, ...data.data];
+        return data;
     } catch (error) {
-        console.error("Error loading more parts:", error);
-    } finally {
+        return false;
+    }
+}
+
+async function loadMore() {
+    loading.value = true;
+    currentPage++;
+
+    const response = await getParts();
+
+    if (response) {
+        parts.value.data = [...parts.value.data, ...response.data];
         loading.value = false;
     }
 }
@@ -159,10 +167,10 @@ function handleCancel() {
                             </p>
                         </td>
                     </tr>
-                    <template v-if="!parts.data || parts.data.length === 0">
+                    <template v-if="!loading && parts.data.length === 0">
                         <tr>
                             <td colspan="100%" class="text-center text-danger">
-                                No Parts as of yet!
+                                No parts as of yet!
                             </td>
                         </tr>
                     </template>
