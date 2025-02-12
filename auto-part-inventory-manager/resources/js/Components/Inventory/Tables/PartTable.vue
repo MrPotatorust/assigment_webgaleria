@@ -25,20 +25,9 @@ let currentPage = 1;
 
 watchEffect(async () => {
     loading.value = true;
-    try {
-        const response = await fetch(
-            route("inventory.part.index", props.car.id) +
-                `?page=${currentPage}?query=${partQuery}`,
-            {
-                headers: {
-                    Accept: "application/json",
-                },
-            }
-        );
-        const data = await response.json();
-        parts.value = data;
-    } catch (error) {
-        console.error("Error loading parts:", error);
+    const response = await getParts();
+    if (response) {
+        parts.value = response;
     }
     loading.value = false;
 });
@@ -58,6 +47,7 @@ async function getParts() {
 
         return data;
     } catch (error) {
+        console.error("Error loading parts:", error);
         return false;
     }
 }

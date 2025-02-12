@@ -78,6 +78,7 @@ function revertCar() {
 
 <template>
     <thead>
+        <!-- Non editing row -->
         <tr v-if="!isEditing" class="align-middle">
             <td class="text-center">
                 <button @click="changeShown" class="btn btn-link p-0">
